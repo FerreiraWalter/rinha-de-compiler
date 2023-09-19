@@ -1,6 +1,6 @@
 import GHC.Generics (Generic)
 
-data File = File
+data File = File 
 	{
 		fileName :: String,
 		fileExpression :: Term,
@@ -100,7 +100,9 @@ data Tuple = Tuple
 
 data First = First
 	{
-
+		firstKind :: String,
+		firstValue :: Term,
+		firstLocarion :: Location
 	} deriving(Show, Generic)
 
 data Second = Second
@@ -109,22 +111,80 @@ data Second = Second
 	} deriving(Show, Generic)
 
 
-data Term = Term
- {
+data BinaryOp
+  = Concat -- Concatenate, +
+  | Add -- Add, +
+  | Sub -- Subtract, -
+  | Mul -- Multiply, *
+  | Div -- Divide, /
+  | Rem -- Rem, %
+  | Eq -- Equal, ==
+  | Neq -- Not equal, !=
+  | Lt -- Less than, <
+  | Gt -- Greater than, >
+  | Lte -- Less than or equal to, <=
+  | Gte -- Greater than or equal to, >=
+  | And -- And, &&
+  | Or -- Or, ||
+  deriving (Show)
 
- } deriving(Show, Generic)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+data Term
+  = BoolTerm
+      { termKind :: String
+      , boolValue :: Bool
+      , termLocation :: Location
+      }
+  | IntTerm
+      { termKind :: String
+      , integerValue :: Integer
+      , termLocation :: Location
+      }
+  | StringTerm
+      { termKind :: String
+      , stringValue :: String
+      , termLocation :: Location
+      }
+  | VarTerm
+      { termKind :: String
+      , text :: String
+      , termLocation :: Location
+      }
+  | FunctionTerm
+      { termKind :: String
+      , parameters :: [Var]
+      , value :: Term
+      , termLocation :: Location
+      }
+  | CallTerm
+      { termKind :: String
+      , callee :: Term
+      , arguments :: [Term]
+      , termLocation :: Location
+      }
+  | BinaryTerm
+      { termKind :: String
+      , lhs :: Term
+      , op :: BinaryOp
+      , rhs :: Term
+      , termLocation :: Location
+      }
+  | LetTerm
+      { termKind :: String
+      , name :: Var
+      , value :: Term
+      , next :: Term
+      , termLocation :: Location
+      }
+  | IfTerm
+      { termKind :: String
+      , condition :: Term
+      , thenBranch :: Term
+      , otherwiseBranch :: Term
+      , termLocation :: Location
+      }
+  | PrintTerm
+      { termKind :: String
+      , printValue :: Term
+      , termLocation :: Location
+      }
+  deriving (Show, Generic)
